@@ -77,6 +77,7 @@ export class SJTextInput implements ComponentFramework.StandardControl<IInputs, 
 
     this.inputElement.style.width = "100%";
     this.inputElement.style.height = "100%";
+    this.inputElement.style.resize = "none";
     this.inputElement.style.boxSizing = "border-box";
 
     this.container.appendChild(this.inputElement);

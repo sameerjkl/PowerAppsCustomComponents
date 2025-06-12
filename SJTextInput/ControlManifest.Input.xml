@@ -19,6 +19,7 @@
  
     <resources>
       <code path="index.ts" order="1"/>
+      <css path="style.css" order="1" />
 
     </resources>
 
