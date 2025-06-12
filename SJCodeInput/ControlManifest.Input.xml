@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<manifest>
+
+  <control namespace="CustomControls" constructor="SJCodeInput" version="0.0.14" display-name-key="SJ_CodeInput" description-key="SJCodeInput description" control-type="standard" >
+   
+    <external-service-usage enabled="false">
+ 
+    </external-service-usage>
+    <property name="value" display-name-key="Default This is Code Input" description-key="value_Desc_Key" of-type="SingleLine.Text" usage="bound" required="false" />
+    <property name="placeholder" display-name-key="Hint Text" description-key="placeholder_Desc_Key" of-type="SingleLine.Text" usage="input" required="false" />
+    <property name="customCSS" display-name-key="Custon CSS" description-key="customCSS_Desc_Key" of-type="SingleLine.Text" usage="input" required="false" />
+    <property name="maxLength" display-name-key="Max Length" description-key="maxLength" of-type="SingleLine.Text" usage="bound" required="false" />
+    
+    <property name="spellcheck" display-name-key="Spell Check" description-key="spellcheck" of-type="SingleLine.Text" usage="input" required="false" />
+    <property name="multiline" display-name-key="Multiline" description-key="multiline" of-type="SingleLine.Text" usage="bound" required="false" />
+    <property name="format" display-name-key="Format" description-key="format" of-type="SingleLine.Text" usage="input" required="false" />
+    <property name="pattern" display-name-key="Regx Pattern" description-key="pattern" of-type="SingleLine.Text" usage="input" required="false" />
+    
+ 
+    <resources>
+      <code path="index.ts" order="1"/>
+      <css path="style.css" order="1" />
+
+    </resources>
+
+  </control>
+</manifest>

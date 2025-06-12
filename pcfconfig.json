@@ -1,3 +1,22 @@
 {
-    "outDir": "./out/controls"
-}
+    "namespace": "CustomControls",          
+    "outputPath": "./out/controls",
+    "controlDependencies": {},
+    "controls": [
+      {
+        "controlId": "SJTextInput",       
+        "description": "SJ Text Input control",
+        "manifest": "./SJTextInput/ControlManifest.Input.xml",
+        "path": "./SJTextInput",
+        "entryPoint": "./SJTextInput/index.ts"
+      },
+      {
+        "controlId": "SJCodeInput",   
+        "description": "SJ Code Input",
+        "manifest": "./SJCodeComponent/ControlManifest.Input.xml",
+        "path": "./SJCodeComponent",
+        "entryPoint": "./SJCodeComponent/index.ts"
+      }
+    ]
+  }
+  
