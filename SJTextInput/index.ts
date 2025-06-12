@@ -1,6 +1,8 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 
-export class SJTextInput implements ComponentFramework.StandardControl<IInputs, IOutputs> {
+export class SJTextInput
+  implements ComponentFramework.StandardControl<IInputs, IOutputs>
+{
   private container: HTMLDivElement;
   private inputElement: HTMLInputElement | HTMLTextAreaElement;
   private value: string;
@@ -12,7 +14,7 @@ export class SJTextInput implements ComponentFramework.StandardControl<IInputs, 
     spellcheck: "",
     maxLength: "",
     pattern: "",
-    customCSS: ""
+    customCSS: "",
   };
 
   public init(
@@ -43,7 +45,7 @@ export class SJTextInput implements ComponentFramework.StandardControl<IInputs, 
       spellcheck: String(spellcheck),
       maxLength: maxLength ?? "",
       pattern: pattern ?? "",
-      customCSS: customCSS ?? ""
+      customCSS: customCSS ?? "",
     };
 
     if (this.inputElement) {
@@ -51,14 +53,18 @@ export class SJTextInput implements ComponentFramework.StandardControl<IInputs, 
       this.container.removeChild(this.inputElement);
     }
 
-    this.inputElement = isMultiline ? document.createElement("textarea") : document.createElement("input");
+    this.inputElement = isMultiline
+      ? document.createElement("textarea")
+      : document.createElement("input");
 
     if (!isMultiline) {
       (this.inputElement as HTMLInputElement).type = type;
     }
 
     this.inputElement.className = "sj-text-input";
-    this.inputElement.value = this.getSanitizedValue(context.parameters.value.raw ?? "");
+    this.inputElement.value = this.getSanitizedValue(
+      context.parameters.value.raw ?? ""
+    );
     this.value = this.inputElement.value;
     this.inputElement.placeholder = context.parameters.placeholder.raw ?? "";
     this.inputElement.spellcheck = spellcheck;
@@ -86,19 +92,40 @@ export class SJTextInput implements ComponentFramework.StandardControl<IInputs, 
   }
 
   private addEventListeners(): void {
-    this.inputElement.addEventListener("input", this.onInputChange as EventListener);
-    this.inputElement.addEventListener("keydown", this.handleKeyDown as EventListener);
-    this.inputElement.addEventListener("paste", this.handlePaste as EventListener);
+    this.inputElement.addEventListener(
+      "input",
+      this.onInputChange as EventListener
+    );
+    this.inputElement.addEventListener(
+      "keydown",
+      this.handleKeyDown as EventListener
+    );
+    this.inputElement.addEventListener(
+      "paste",
+      this.handlePaste as EventListener
+    );
     this.inputElement.addEventListener("blur", this.onBlur as EventListener);
     this.inputElement.addEventListener("focus", this.onFocus as EventListener);
   }
 
   private removeEventListeners(): void {
-    this.inputElement.removeEventListener("input", this.onInputChange as EventListener);
-    this.inputElement.removeEventListener("keydown", this.handleKeyDown as EventListener);
-    this.inputElement.removeEventListener("paste", this.handlePaste as EventListener);
+    this.inputElement.removeEventListener(
+      "input",
+      this.onInputChange as EventListener
+    );
+    this.inputElement.removeEventListener(
+      "keydown",
+      this.handleKeyDown as EventListener
+    );
+    this.inputElement.removeEventListener(
+      "paste",
+      this.handlePaste as EventListener
+    );
     this.inputElement.removeEventListener("blur", this.onBlur as EventListener);
-    this.inputElement.removeEventListener("focus", this.onFocus as EventListener);
+    this.inputElement.removeEventListener(
+      "focus",
+      this.onFocus as EventListener
+    );
   }
   public refreshData(): void {
     this.value = "";
@@ -107,7 +134,6 @@ export class SJTextInput implements ComponentFramework.StandardControl<IInputs, 
     }
     this.notifyOutputChanged();
   }
-  
 
   private handleKeyDown = (e: Event): void => {
     const event = e as KeyboardEvent;
@@ -125,9 +151,12 @@ export class SJTextInput implements ComponentFramework.StandardControl<IInputs, 
 
     const pasted = event.clipboardData?.getData("text") ?? "";
     const regex = this.getCharRegexFromPattern();
-    const sanitized = regex ? [...pasted].filter(char => regex.test(char)).join("") : pasted;
+    const sanitized = regex
+      ? [...pasted].filter((char) => regex.test(char)).join("")
+      : pasted;
 
-    const cursor = this.inputElement.selectionStart ?? this.inputElement.value.length;
+    const cursor =
+      this.inputElement.selectionStart ?? this.inputElement.value.length;
     const end = this.inputElement.selectionEnd ?? cursor;
 
     const newValue =
@@ -169,7 +198,7 @@ export class SJTextInput implements ComponentFramework.StandardControl<IInputs, 
   private getSanitizedValue(value: string): string {
     const regex = this.getCharRegexFromPattern();
     if (!regex) return value;
-    return [...value].filter(char => regex.test(char)).join("");
+    return [...value].filter((char) => regex.test(char)).join("");
   }
 
   private validatePattern(value: string): void {
@@ -179,7 +208,10 @@ export class SJTextInput implements ComponentFramework.StandardControl<IInputs, 
       const regex = new RegExp(`^${pattern}$`);
       const isValid = regex.test(value);
       this.inputElement.style.borderColor = isValid ? "" : "red";
-      this.inputElement.setAttribute("aria-invalid", isValid ? "false" : "true");
+      this.inputElement.setAttribute(
+        "aria-invalid",
+        isValid ? "false" : "true"
+      );
     } catch (e) {
       console.warn("Pattern validation error:", e);
     }
@@ -193,6 +225,46 @@ export class SJTextInput implements ComponentFramework.StandardControl<IInputs, 
     console.log("Focused");
   };
 
+  // private applyCustomCSS(cssRaw: string | null): void {
+  //   const styleId = "sj-text-input-style";
+  //   const oldStyle = document.getElementById(styleId);
+  //   if (oldStyle) oldStyle.remove();
+
+  //   const style = document.createElement("style");
+  //   style.id = styleId;
+  //   style.innerHTML = `
+  //     .sj-text-input {
+  //       width: 100%;
+  //       height: 100%;
+  //       box-sizing: border-box;
+  //       padding: 8px;
+  //       border: 1px solid #ccc;
+  //       border-radius: 4px;
+  //       font-size: 14px;
+  //       transition: border-color 0.2s ease;
+  //       ${cssRaw ?? ""}
+  //     }
+
+  //     .sj-text-input:hover {
+  //       filter: brightness(1.05);
+  //       box-shadow: 0 0 5px rgba(0, 120, 212, 0.3);
+  //     }
+
+  //     .sj-text-input:focus {
+  //       outline: none;
+  //       border-color: #005a9e;
+  //       box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+  //     }
+
+  //     .sj-text-input:disabled {
+  //       background-color: #eee !important;
+  //       color: #666 !important;
+  //       cursor: not-allowed;
+  //     }
+  //   `;
+  //   document.head.appendChild(style);
+  // }
+
   private applyCustomCSS(cssRaw: string | null): void {
     const styleId = "sj-text-input-style";
     const oldStyle = document.getElementById(styleId);
@@ -204,30 +276,13 @@ export class SJTextInput implements ComponentFramework.StandardControl<IInputs, 
       .sj-text-input {
         width: 100%;
         height: 100%;
-        box-sizing: border-box;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 14px;
-        transition: border-color 0.2s ease;
+     
         ${cssRaw ?? ""}
-      }
-
-      .sj-text-input:hover {
-        filter: brightness(1.05);
-        box-shadow: 0 0 5px rgba(0, 120, 212, 0.3);
-      }
-
-      .sj-text-input:focus {
-        outline: none;
-        border-color: #005a9e;
-        box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
-      }
+      }    
 
       .sj-text-input:disabled {
-        background-color: #eee !important;
-        color: #666 !important;
-        cursor: not-allowed;
+       
+              cursor: not-allowed;
       }
     `;
     document.head.appendChild(style);
@@ -252,12 +307,17 @@ export class SJTextInput implements ComponentFramework.StandardControl<IInputs, 
     this.inputElement.spellcheck = context.parameters.spellcheck.raw === "true";
   }
 
-  private hasStructuralChange(context: ComponentFramework.Context<IInputs>): boolean {
+  private hasStructuralChange(
+    context: ComponentFramework.Context<IInputs>
+  ): boolean {
     return (
-      this.currentParams.isMultiline !== String(context.parameters.multiline.raw === "true") ||
+      this.currentParams.isMultiline !==
+        String(context.parameters.multiline.raw === "true") ||
       this.currentParams.type !== (context.parameters.format?.raw ?? "text") ||
-      this.currentParams.spellcheck !== String(context.parameters.spellcheck.raw === "true") ||
-      this.currentParams.maxLength !== (context.parameters.maxLength.raw ?? "") ||
+      this.currentParams.spellcheck !==
+        String(context.parameters.spellcheck.raw === "true") ||
+      this.currentParams.maxLength !==
+        (context.parameters.maxLength.raw ?? "") ||
       this.currentParams.pattern !== (context.parameters.pattern.raw ?? "") ||
       this.currentParams.customCSS !== (context.parameters.customCSS.raw ?? "")
     );
@@ -265,7 +325,7 @@ export class SJTextInput implements ComponentFramework.StandardControl<IInputs, 
 
   public getOutputs(): IOutputs {
     return {
-      value: this.value
+      value: this.value,
     };
   }
 
