@@ -1,8 +1,6 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 
-export class SJTextInput
-  implements ComponentFramework.StandardControl<IInputs, IOutputs>
-{
+export class SJTextInput implements ComponentFramework.StandardControl<IInputs, IOutputs> {
   private container: HTMLDivElement;
   private inputElement: HTMLInputElement | HTMLTextAreaElement;
   private value: string;
@@ -14,7 +12,7 @@ export class SJTextInput
     spellcheck: "",
     maxLength: "",
     pattern: "",
-    customCSS: "",
+    customCSS: ""
   };
 
   public init(
@@ -45,7 +43,7 @@ export class SJTextInput
       spellcheck: String(spellcheck),
       maxLength: maxLength ?? "",
       pattern: pattern ?? "",
-      customCSS: customCSS ?? "",
+      customCSS: customCSS ?? ""
     };
 
     if (this.inputElement) {
@@ -53,18 +51,14 @@ export class SJTextInput
       this.container.removeChild(this.inputElement);
     }
 
-    this.inputElement = isMultiline
-      ? document.createElement("textarea")
-      : document.createElement("input");
+    this.inputElement = isMultiline ? document.createElement("textarea") : document.createElement("input");
 
     if (!isMultiline) {
       (this.inputElement as HTMLInputElement).type = type;
     }
 
     this.inputElement.className = "sj-text-input";
-    this.inputElement.value = this.getSanitizedValue(
-      context.parameters.value.raw ?? ""
-    );
+    this.inputElement.value = this.getSanitizedValue(context.parameters.value.raw ?? "");
     this.value = this.inputElement.value;
     this.inputElement.placeholder = context.parameters.placeholder.raw ?? "";
     this.inputElement.spellcheck = spellcheck;
@@ -92,40 +86,19 @@ export class SJTextInput
   }
 
   private addEventListeners(): void {
-    this.inputElement.addEventListener(
-      "input",
-      this.onInputChange as EventListener
-    );
-    this.inputElement.addEventListener(
-      "keydown",
-      this.handleKeyDown as EventListener
-    );
-    this.inputElement.addEventListener(
-      "paste",
-      this.handlePaste as EventListener
-    );
+    this.inputElement.addEventListener("input", this.onInputChange as EventListener);
+    this.inputElement.addEventListener("keydown", this.handleKeyDown as EventListener);
+    this.inputElement.addEventListener("paste", this.handlePaste as EventListener);
     this.inputElement.addEventListener("blur", this.onBlur as EventListener);
     this.inputElement.addEventListener("focus", this.onFocus as EventListener);
   }
 
   private removeEventListeners(): void {
-    this.inputElement.removeEventListener(
-      "input",
-      this.onInputChange as EventListener
-    );
-    this.inputElement.removeEventListener(
-      "keydown",
-      this.handleKeyDown as EventListener
-    );
-    this.inputElement.removeEventListener(
-      "paste",
-      this.handlePaste as EventListener
-    );
+    this.inputElement.removeEventListener("input", this.onInputChange as EventListener);
+    this.inputElement.removeEventListener("keydown", this.handleKeyDown as EventListener);
+    this.inputElement.removeEventListener("paste", this.handlePaste as EventListener);
     this.inputElement.removeEventListener("blur", this.onBlur as EventListener);
-    this.inputElement.removeEventListener(
-      "focus",
-      this.onFocus as EventListener
-    );
+    this.inputElement.removeEventListener("focus", this.onFocus as EventListener);
   }
   public refreshData(): void {
     this.value = "";
@@ -134,6 +107,7 @@ export class SJTextInput
     }
     this.notifyOutputChanged();
   }
+  
 
   private handleKeyDown = (e: Event): void => {
     const event = e as KeyboardEvent;
@@ -151,12 +125,9 @@ export class SJTextInput
 
     const pasted = event.clipboardData?.getData("text") ?? "";
     const regex = this.getCharRegexFromPattern();
-    const sanitized = regex
-      ? [...pasted].filter((char) => regex.test(char)).join("")
-      : pasted;
+    const sanitized = regex ? [...pasted].filter(char => regex.test(char)).join("") : pasted;
 
-    const cursor =
-      this.inputElement.selectionStart ?? this.inputElement.value.length;
+    const cursor = this.inputElement.selectionStart ?? this.inputElement.value.length;
     const end = this.inputElement.selectionEnd ?? cursor;
 
     const newValue =
@@ -198,7 +169,7 @@ export class SJTextInput
   private getSanitizedValue(value: string): string {
     const regex = this.getCharRegexFromPattern();
     if (!regex) return value;
-    return [...value].filter((char) => regex.test(char)).join("");
+    return [...value].filter(char => regex.test(char)).join("");
   }
 
   private validatePattern(value: string): void {
@@ -208,10 +179,7 @@ export class SJTextInput
       const regex = new RegExp(`^${pattern}$`);
       const isValid = regex.test(value);
       this.inputElement.style.borderColor = isValid ? "" : "red";
-      this.inputElement.setAttribute(
-        "aria-invalid",
-        isValid ? "false" : "true"
-      );
+      this.inputElement.setAttribute("aria-invalid", isValid ? "false" : "true");
     } catch (e) {
       console.warn("Pattern validation error:", e);
     }
@@ -276,7 +244,8 @@ export class SJTextInput
       .sj-text-input {
         width: 100%;
         height: 100%;
-     
+        padding: 8px;
+        
         ${cssRaw ?? ""}
       }    
 
@@ -287,6 +256,7 @@ export class SJTextInput
     `;
     document.head.appendChild(style);
   }
+
 
   public updateView(context: ComponentFramework.Context<IInputs>): void {
     if (this.hasStructuralChange(context)) {
@@ -307,17 +277,12 @@ export class SJTextInput
     this.inputElement.spellcheck = context.parameters.spellcheck.raw === "true";
   }
 
-  private hasStructuralChange(
-    context: ComponentFramework.Context<IInputs>
-  ): boolean {
+  private hasStructuralChange(context: ComponentFramework.Context<IInputs>): boolean {
     return (
-      this.currentParams.isMultiline !==
-        String(context.parameters.multiline.raw === "true") ||
+      this.currentParams.isMultiline !== String(context.parameters.multiline.raw === "true") ||
       this.currentParams.type !== (context.parameters.format?.raw ?? "text") ||
-      this.currentParams.spellcheck !==
-        String(context.parameters.spellcheck.raw === "true") ||
-      this.currentParams.maxLength !==
-        (context.parameters.maxLength.raw ?? "") ||
+      this.currentParams.spellcheck !== String(context.parameters.spellcheck.raw === "true") ||
+      this.currentParams.maxLength !== (context.parameters.maxLength.raw ?? "") ||
       this.currentParams.pattern !== (context.parameters.pattern.raw ?? "") ||
       this.currentParams.customCSS !== (context.parameters.customCSS.raw ?? "")
     );
@@ -325,7 +290,7 @@ export class SJTextInput
 
   public getOutputs(): IOutputs {
     return {
-      value: this.value,
+      value: this.value
     };
   }
 
