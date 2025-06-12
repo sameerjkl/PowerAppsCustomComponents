@@ -99,6 +99,14 @@ export class SJTextInput implements ComponentFramework.StandardControl<IInputs, 
     this.inputElement.removeEventListener("blur", this.onBlur as EventListener);
     this.inputElement.removeEventListener("focus", this.onFocus as EventListener);
   }
+  public refreshData(): void {
+    this.value = "";
+    if (this.inputElement) {
+      this.inputElement.value = "";
+    }
+    this.notifyOutputChanged();
+  }
+  
 
   private handleKeyDown = (e: Event): void => {
     const event = e as KeyboardEvent;
